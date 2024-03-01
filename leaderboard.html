@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard Viewer</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+            color: #333;
+            text-align: center;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+        }
+
+        section {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-x: auto; /* Enable horizontal scroll for smaller screens */
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        label {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        #shareable-link {
+            margin-top: 20px;
+        }
+
+        #upload-button {
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function handleFileUpload() {
+            var fileInput = document.getElementById('fileInput');
+            var tableBody = document.getElementById('tableBody');
+            var shareableLink = document.getElementById('shareable-link');
+
+            tableBody.innerHTML = ''; // Clear previous content
+            shareableLink.innerHTML = ''; // Clear previous link
+
+            var file = fileInput.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var data = e.target.result;
+                    var workbook = XLSX.read(data, { type: 'binary' });
+                    var sheetName = workbook.SheetNames[0];
+                    var sheet = workbook.Sheets[sheetName];
+                    var tableData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                    // Create and populate the table
+                    for (var i = 0; i < tableData.length; i++) {
+                        var row = tableBody.insertRow(-1);
+                        for (var j = 0; j < tableData[i].length; j++) {
+                            var cell = row.insertCell(-1);
+                            cell.textContent = tableData[i][j];
+                        }
+                    }
+
+                    // Display shareable link
+                    var link = document.createElement('a');
+                    link.href = URL.createObjectURL(file);
+                    link.download = 'uploaded_leaderboard.xlsx';
+                    link.textContent = 'Download Uploaded Leaderboard';
+                    shareableLink.appendChild(link);
+
+                    // Update browser URL to make the page shareable
+                    var shareableUrl = window.location.href.split('?')[0] + '?file=' + encodeURIComponent(file.name);
+                    history.replaceState({}, document.title, shareableUrl);
+                };
+
+                reader.readAsBinaryString(file);
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<header>
+    <h1>Leaderboard Viewer</h1>
+</header>
+
+<section>
+    <table>
+        <thead>
+            <tr id="tableHeader"></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <div id="shareable-link"></div>
+
+    <label for="fileInput">Upload Leaderboard Excel Sheet</label>
+    <input type="file" id="fileInput" onchange="handleFileUpload()" accept=".xlsx, .xls">
+
+    <button id="upload-button" onclick="document.getElementById('fileInput').click()">Upload</button>
+</section>
+
+</body>
+</html>

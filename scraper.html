@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevsRide's Automated Scores Scraper</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #3e3838;
+            color: #333;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #444;
+            overflow: auto;
+        }
+
+        nav a {
+            float: left;
+            display: block;
+            color: #fff;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: #555;
+        }
+
+        nav input[type="file"] {
+            display: none;
+        }
+
+        nav button {
+            float: right;
+            display: block;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            padding: 14px 16px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        section {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        function downloadFile() {
+            var githubRepoUrl = 'https://github.com/gabyah92/CodeRankingLeaderboard';
+            window.location.href = githubRepoUrl;
+        }
+
+        function goToAdminPage() {
+            window.location.href = 'admin.html';
+        }
+    </script>
+</head>
+<body>
+
+<header>
+    <h1>DevsRide's Automated Scores Scraper</h1>
+</header>
+
+<nav>
+    <a onclick="goToAdminPage()">Home</a>
+    <a href="#usage">Usage</a>
+    <a href="#excel-sheet">Excel Sheet Requirements</a>
+    <a href="#metric">Metric Calculation</a>
+    <input type="file" id="fileInput" onchange="handleFileUpload()">
+    <button onclick="downloadFile()">Download</button>
+</nav>
+
+<section id="usage">
+    <h2>Usage</h2>
+    <p>The usage is quite simple! Just upload an excel sheet of users, provide usernames of all HackerRank Contests to be considered and it automatically generates an excel sheet printing out their ratings and scores (gfg, hackerrank) across the above-mentioned 5 platforms. Note that Providing HackerRank Contests or HackerRank Usernames is Optional.</p>
+</section>
+
+<section id="excel-sheet">
+    <h2>Excel Sheet Requirements</h2>
+    <p>An Excel sheet must be selected which contains columns in this EXACT order: {Handle, GFG_Handle, Codeforces_Handle, LeetCode_Handle, CodeChef_Handle, HackerRank_Handle(Optional)}</p>
+    <p>The Excel sheet will be generated in the same directory as the jar file, in a folder called Leaderboards, which contains the following columns: {Handle, Codeforces_Handle, Codeforces_Rating, GFG_Handle, GFG_Contest_Score, GFG_Practice_Score, Leetcode_Handle, Leetcode_Rating, CodeChef_Handle, Codechef_Rating, HackerRank_Handle, HackerRank_Practice_Score, Percentile}</p>
+</section>
+
+<section id="metric">
+    <h2>Metric Calculation</h2>
+    <p>If Hackerrank Usernames & Contest ID's are provided:</p>
+    <p>30% Codeforces_Rating + 30% GFG_Contest_Score + 10% GFG_Practice_Score + 10% Leetcode_Rating + 10% Codechef_Rating + 10% HackerRank.</p>
+    <p>If NOT:</p>
+    <p>35% Codeforces_Rating + 30% GFG_Contest_Score + 10% GFG_Practice_Score + 15% Leetcode_Rating + 10% Codechef_Rating.</p>
+    <p>Since contest score can be too big when compared to ratings, normalization was performed for the exact metric.</p>
+</section>
+
+<!-- Add your content here -->
+
+</body>
+</html>
